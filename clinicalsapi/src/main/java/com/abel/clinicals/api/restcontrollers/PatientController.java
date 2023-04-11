@@ -3,6 +3,8 @@ package com.abel.clinicals.api.restcontrollers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,26 +13,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abel.clinicals.api.dto.PatientRequestDto;
 import com.abel.clinicals.api.model.ClinicalData;
 import com.abel.clinicals.api.model.Patient;
 import com.abel.clinicals.api.repository.PatientRepository;
+import com.abel.clinicals.api.service.PatientService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
+@Slf4j
 public class PatientController {
 
 	private PatientRepository patientRepository;
+	
+	private PatientService patientService;
 
 	@Autowired
-	PatientController(PatientRepository patientRepository) {
-		this.patientRepository = patientRepository;
+	PatientController(PatientService patientService,PatientRepository patientRepository) {
+		this.patientService = patientService;
+		this.patientRepository=patientRepository;
 	}
 
 	@RequestMapping(value = "/patients", method = RequestMethod.POST)
-	public Patient savePatient(@RequestBody Patient patient) {
-		System.out.println(patient.getFirstName());
-		return patientRepository.save(patient);
+	public Patient savePatient(@RequestBody @Valid PatientRequestDto patientRequest) {
+		log.info("Patient to be saved: "+patientRequest.getFirstName());
+		
+		return patientService.savePatient(patientRequest);
 	}
 
 	@RequestMapping(value = "/patients/{id}", method = RequestMethod.GET)
