@@ -28,7 +28,7 @@ class AddPatient extends React.Component{
         .then(res=>{
           //  document.write("Patient Created Successfully!!");
           console.log(res);
-        this.props.history.push('/'); // redirect to the patients page
+        this.props.history.push('/'); // redirect to the home page
       }).catch((error) => {
         console.log(error);
         this.setState({ errorMessage: 'Failed to create patient' });
