@@ -5,17 +5,34 @@ import { PORT_NUMBER } from './config';
 
 class Home extends React.Component{
     state ={
-        patientData:[]
+        patientData:[],
+        loading:true
     }
 
-    componentWillMount(){
-         axios.get(`http://localhost:${PORT_NUMBER}/clinicalservices/api/patients`).then(res=>{
-            const patientData = res.data;
-            this.setState({patientData})
-        })
-    }
+    // componentWillMount(){
+    //     const promise = axios.get(`http://localhost:${PORT_NUMBER}/clinicalservices/api/patients`);
+    //     promise.then(res=>{
+    //         const patientData = res.data;
+    //         this.setState({patientData})
+    //     })
+    // }
+
+componentDidMount(){
+     axios.get(`http://localhost:${PORT_NUMBER}/clinicalservices/api/patients`)   
+   .then(res=>{
+    const data = res.data;
+    this.setState({patientData:data,loading:false})
+   }).catch(error =>{
+    console.log(error);
+    this.setState({loading:false});
+   });
+}
 
     render(){
+        if (this.state.loading) {
+            return <div>Loading...</div>;
+          }
+
         return (<div>
             <h2>Patients:</h2>
             <table align='center'>
